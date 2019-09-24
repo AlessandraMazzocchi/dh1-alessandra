@@ -1,0 +1,7 @@
+Find words with "at" in them --> /a[(^t)]/gim
+Find words that end in "s" --> /[s$]\s/gim - /[s]\b/gim
+Find all the words with consecutive vowels: \b\w*[aeiou]{2}\w\b/gi
+Find all the words that have two consecutive vowels --> /[aeiou]{2,5}/gim
+Find all the words that have two "t"s in them -->
+Find all the words that have two (or more) "t"s in them --> /(t)\w+(t)/gim
+Find all the words that have two consecutive "T"s in them --> /(t){2}/gim
