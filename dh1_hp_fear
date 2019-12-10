@@ -3,8 +3,12 @@ Libraries
 ```{r}
 library(tidyverse)
 library(tidytext)
-install.packages("harrypotter")
 library(harrypotter)
+
+set.seed(1234)
+theme_set(theme_minimal())
+install.packages("devtools")
+devtools::install_github("bradleyboehmke/harrypotter")
 ```
 
 List of books, what's inside
