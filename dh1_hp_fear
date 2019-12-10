@@ -1,8 +1,20 @@
-Libraries
-
+Install packages
 ```{r}
-library(tidyverse)
+install.packages("harrypotter")
+install.packages("wordcloud")
+```
+
+Libraries
+```{r}
+library(wordcloud)
+library(devtools)
+library(tidyverse)      
+library(stringr)        
 library(tidytext)
+library(dplyr)
+library(reshape2)
+library(igraph)
+library(ggraph)
 library(harrypotter)
 
 set.seed(1234)
@@ -11,7 +23,39 @@ install.packages("devtools")
 devtools::install_github("bradleyboehmke/harrypotter")
 ```
 
-List of books, what's inside
+Name the books, create a directory
 ```{r}
-list(harrypotter)
+hp_books <- c("philosophers_stone", "chamber_of_secrets",
+              "prisoner_of_azkaban", "goblet_of_fire",
+              "order_of_the_phoenix", "half_blood_prince",
+              "deathly_hallows")
 ```
+
+List words
+# combine books into a list
+hp_words <- list(
+  philosophers_stone,
+  chamber_of_secrets,
+  prisoner_of_azkaban,
+  goblet_of_fire,
+  order_of_the_phoenix,
+  half_blood_prince,
+  deathly_hallows
+) %>%
+  # name each list element
+  set_names(hp_books) %>%
+  # convert each book to a data frame and merge into a single data frame
+  map_df(as_tibble, .id = "book") %>%
+  # convert book to a factor
+  mutate(book = factor(book, levels = hp_books)) %>%
+  # remove empty chapters
+  drop_na(value) %>%
+  # create a chapter id column
+  group_by(book) %>%
+  mutate(chapter = row_number(book)) %>%
+  # tokenize the data frame
+  unnest_tokens(word, value)
+
+hp_words
+Error in eval(lhs, parent, parent) : object 'philosophers_stone' not found
+
