@@ -1,0 +1,13 @@
+Libraries
+
+```{r}
+library(tidyverse)
+library(tidytext)
+install.packages("harrypotter")
+library(harrypotter)
+```
+
+List of books, what's inside
+```{r}
+list(harrypotter)
+```
