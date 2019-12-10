@@ -30,17 +30,52 @@ if (packageVersion("devtools") < 1.6) {
 devtools::install_github("bradleyboehmke/harrypotter")
 ```
 
-Name the books, create a directory
+Name the books, create a directory (remember to use "" signs)
 ```{r}
 titles <- c("philosophers_stone", "chamber_of_secrets",
               "prisoner_of_azkaban", "goblet_of_fire",
               "order_of_the_phoenix", "half_blood_prince",
               "deathly_hallows")
 
-books <- list(philosophers_stone, chamber_of_secrets, prisoner_of_azkaban,
-              goblet_of_fire, order_of_the_phoenix, half_blood_prince,
-              deathly_hallows)
+books <- list("philosophers_stone", "chamber_of_secrets",
+              "prisoner_of_azkaban", "goblet_of_fire",
+              "order_of_the_phoenix", "half_blood_prince",
+              "deathly_hallows")
 ```
 
-Error: object 'philosophers_stone' not found
+Combine into a list (with explanation for each line)
+```{r}
+hp_words <- list("philosophers_stone", "chamber_of_secrets",
+              "prisoner_of_azkaban", "goblet_of_fire",
+              "order_of_the_phoenix", "half_blood_prince",
+              "deathly_hallows"
+) %>%
+  # name each list element
+  set_names(hp_books) %>%
+  # convert each book to a data frame and merge into a single data frame
+  map_df(as_tibble, .id = "book") %>%
+  # convert book to a factor
+  mutate(book = factor(book, levels = hp_books)) %>%
+  # remove empty chapters
+  drop_na(value) %>%
+  # create a chapter id column
+  group_by(book) %>%
+  mutate(chapter = row_number(book)) %>%
+  # tokenize the data frame
+  unnest_tokens(word, value)
 
+hp_words
+```
+
+RESULTS FROM CONSOLE (bottom of RStudio) - cannot copy R notebook tibble
+# A tibble: 7 x 3
+# Groups:   book [7]
+  book                 chapter word                
+  <fct>                  <int> <chr>               
+1 philosophers_stone         1 philosophers_stone  
+2 chamber_of_secrets         1 chamber_of_secrets  
+3 prisoner_of_azkaban        1 prisoner_of_azkaban 
+4 goblet_of_fire             1 goblet_of_fire      
+5 order_of_the_phoenix       1 order_of_the_phoenix
+6 half_blood_prince          1 half_blood_prince   
+7 deathly_hallows            1 deathly_hallows    
