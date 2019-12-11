@@ -43,7 +43,7 @@ books <- list("philosophers_stone", "chamber_of_secrets",
               "deathly_hallows")
 ```
 
-Combine into a list (with explanation for each line)
+Combine into a list (with explanation for each line) - (with quotes signs)
 ```{r}
 hp_words <- list("philosophers_stone", "chamber_of_secrets",
               "prisoner_of_azkaban", "goblet_of_fire",
@@ -81,7 +81,7 @@ RESULTS FROM CONSOLE (bottom of RStudio) - cannot copy R notebook tibble
 7 deathly_hallows            1 deathly_hallows    
 
 OPTION #2
-Combine into a list (with explanation for each line)
+Combine into a list (with explanation for each line) - (without quotes signs)
 ```{r}
 hp_words <- list(philosophers_stone, chamber_of_secrets,
               prisoner_of_azkaban, goblet_of_fire,
