@@ -67,7 +67,7 @@ hp_words <- list("philosophers_stone", "chamber_of_secrets",
 hp_words
 ```
 
-RESULTS FROM CONSOLE (bottom of RStudio) - cannot copy R notebook tibble
+RESULTS OPTION #1 FROM CONSOLE (bottom of RStudio) - cannot copy R notebook tibble
 # A tibble: 7 x 3
 # Groups:   book [7]
   book                 chapter word                
@@ -104,5 +104,126 @@ hp_words <- list(philosophers_stone, chamber_of_secrets,
 
 hp_words
 ```
+RESULTS OPTION #2 FROM CONSOLE (bottom of RStudio) - cannot copy R notebook tibble
+# A tibble: 1,089,386 x 3
+# Groups:   book [7]
+   book               chapter word   
+   <fct>                <int> <chr>  
+ 1 philosophers_stone       1 the    
+ 2 philosophers_stone       1 boy    
+ 3 philosophers_stone       1 who    
+ 4 philosophers_stone       1 lived  
+ 5 philosophers_stone       1 mr     
+ 6 philosophers_stone       1 and    
+ 7 philosophers_stone       1 mrs    
+ 8 philosophers_stone       1 dursley
+ 9 philosophers_stone       1 of     
+10 philosophers_stone       1 number 
+# … with 1,089,376 more rows
 
-Error in eval(lhs, parent, parent) : object 'philosophers_stone' not found
+Finding the most frequent words in HP for each book (finalized to extract the sentiments)
+```{r}
+hp_words %>%
+  # delete stopwords
+  anti_join(stop_words) %>%
+  # summarize count per word per book
+  count(book, word, sort = TRUE) %>%
+  # get top 15 words per book
+  group_by(book) %>%
+  top_n(15) %>%
+  ungroup() %>%
+  mutate(word = reorder_within(word, n, book)) %>%
+  # create barplot
+  ggplot(aes(x = word, y = n, fill = book)) + 
+  geom_col(color = "black") +
+  scale_x_reordered() +
+  labs(title = "Most frequent words in Harry Potter",
+       x = NULL,
+       y = "Word count") +
+  facet_wrap(~ book, scales = "free") +
+  coord_flip() +
+  theme(legend.position = "none")
+```
+RESULTS (cannot copy the table)
+Harry is the most frequent word in all of the books followed by Ron in the first 4 books, Hermione in the 5th and 7th and 
+Dumbledore in the 6th. The first 3-4 names of every book appear always to be Harry, Ron, Hermione, Dumbledore or Hagrid.
+Having a series of characters that occur so close one another shows that J.K. Rowling writing is heavily sentimental.
+
+Extracting sentiment list
+```{r}
+series %>%
+  right_join(get_sentiments("nrc")) %>%
+  filter(!is.na(sentiment)) %>%
+  count(sentiment, sort = TRUE)
+```
+RESULTS
+sentiment <chr> n <int>
+negative	      3324			
+positive	      2312			
+fear	          1476			
+anger	          1247			
+trust	          1231			
+sadness	        1191			
+disgust	        1058			
+anticipation	  839			
+joy	            689			
+surprise	      534	
+
+Group the words by AFINN dictionary (sentiment analysis)
+```{r}
+(hp_bing <- hp_words %>% 
+  inner_join(get_sentiments("bing")))
+```
+
+Divide the positive and the negative sentiments in HP series
+```{r}
+
+# all series
+hp_bing %>%
+  # generate frequency count for each word and sentiment
+  group_by(sentiment) %>%
+  count(word, sort = TRUE) %>%
+  # extract 10 most frequent pos/neg words
+  group_by(sentiment) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  # prep data for sorting each word independently by facet
+  mutate(word = reorder_within(word, n, sentiment)) %>%
+  # generate the bar plot
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  # used with reorder_within() to label the axis tick marks
+  scale_x_reordered() +
+  facet_wrap(~ sentiment, scales = "free_y") +
+  labs(title = "Sentimental words used in the Harry Potter series",
+       x = NULL,
+       y = "Number of occurences in all seven books") +
+  coord_flip()
+```
+Sentiment analysis for each book using AFINN dictionary
+```{r}
+hp_words %>% 
+  inner_join(get_sentiments("afinn")) %>%
+  group_by(book, chapter) %>%
+  summarize(value = sum(value)) %>%
+  ggplot(aes(chapter, value, fill = book)) +
+  geom_col() +
+  facet_wrap(~ book, scales = "free_x") +
+  labs(title = "Emotional arc of Harry Potter books",
+       subtitle = "AFINN sentiment dictionary",
+       x = "Chapter",
+       y = "Emotional score") +
+  theme(legend.position = "none")
+```
+RESULTS (cannot copy tables)
+It is very interesting to notice how the sentiments charts experience severe ups and downs over the seven books. 
+As stated before, J.K. Rowling's writing shows the emotional connection between characters - positive and negative -, 
+in fact, the peaks of positive and negative sentiments are directly proportional to Harry's experiences or his closest
+emotional links' experiences. For example, in the HBP the unexpected peak of positive vocabulary immediately followed
+by a chunk of negative vocabulary matches with Harry's success in collecting the last
+
+
+
+
+
+
