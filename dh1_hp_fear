@@ -2,6 +2,7 @@ Install packages
 ```{r}
 install.packages("harrypotter")
 install.packages("wordcloud")
+install.packages("devtools")
 ```
 
 Libraries
@@ -20,7 +21,6 @@ library(ggplot2)
 
 set.seed(1234)
 theme_set(theme_minimal())
-install.packages("devtools")
 devtools::install_github("bradleyboehmke/harrypotter")
 
 if (packageVersion("devtools") < 1.6) {
@@ -222,7 +222,9 @@ in fact, the peaks of positive and negative sentiments are directly proportional
 emotional links' experiences. For example, in the HBP the unexpected peak of positive vocabulary immediately followed
 by a chunk of negative vocabulary matches with Harry's success in collecting the last memory bit for the Horcrux hunt
 and, right after, the travel with Dumbledore, his mental torture drinking the potion and the final death.
-In addition, characters' psychological development are also represented throught 
+In addition, characters' psychological development are also represented throught the sentiment vocabulary: in their puberty
+years (second half of 3rd book, 4th, and 5th) , Harry, Ron and Hermione experience severe peaks of emotions - both positive 
+and negative - 
 
 
 
