@@ -3,6 +3,10 @@ Install packages
 install.packages("harrypotter")
 install.packages("wordcloud")
 install.packages("devtools")
+install.packages("tidyverse")
+install.packages("igraph")
+install.packages("ggraph")
+install.packages("ggwordcloud")
 ```
 
 Libraries
@@ -18,6 +22,7 @@ library(igraph)
 library(ggraph)
 library(harrypotter)
 library(ggplot2)
+library(ggwordcloud)
 
 set.seed(1234)
 theme_set(theme_minimal())
@@ -32,15 +37,15 @@ devtools::install_github("bradleyboehmke/harrypotter")
 
 Name the books, create a directory (remember to use "" signs)
 ```{r}
-titles <- c("philosophers_stone", "chamber_of_secrets",
+hp_books <- c("philosophers_stone", "chamber_of_secrets",
               "prisoner_of_azkaban", "goblet_of_fire",
               "order_of_the_phoenix", "half_blood_prince",
               "deathly_hallows")
 
-books <- list("philosophers_stone", "chamber_of_secrets",
-              "prisoner_of_azkaban", "goblet_of_fire",
-              "order_of_the_phoenix", "half_blood_prince",
-              "deathly_hallows")
+books <- list(philosophers_stone, chamber_of_secrets,
+              prisoner_of_azkaban, goblet_of_fire,
+              order_of_the_phoenix, half_blood_prince,
+              deathly_hallows)
 ```
 
 Combine into a list (with explanation for each line) - (with quotes signs)
@@ -224,7 +229,7 @@ by a chunk of negative vocabulary matches with Harry's success in collecting the
 and, right after, the travel with Dumbledore, his mental torture drinking the potion and the final death.
 In addition, characters' psychological development are also represented throught the sentiment vocabulary: in their puberty
 years (second half of 3rd book, 4th, and 5th) , Harry, Ron and Hermione experience severe peaks of emotions - both positive 
-and negative - 
+and negative - represented here with the AFINN dictionary. 
 
 
 
