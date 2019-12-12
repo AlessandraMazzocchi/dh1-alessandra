@@ -1,3 +1,5 @@
+In this project, I would like to explore how 
+
 Install packages
 ```{r}
 install.packages("harrypotter")
