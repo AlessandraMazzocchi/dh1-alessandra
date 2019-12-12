@@ -2,18 +2,36 @@ In this project, I would like to explore how J.K. Rowling modeled the Harry Pott
 emotions and how the protagonist - Harry - reacts emotionally to his closest human connections. 
 Before starting this project, I revised the theoretical portion of coding available on the syllabus of Introduction 
 to Digital Humanities I and two books available in the lab: Deep Learning with R and Text Analysis with R for Student 
-of Literature. 
+of Literature. Being my first approach to a bigger project, I found hard time in recalling the exercises we did in class, more 
+for the pressure of not being able of analysing the texts than for the subject itself. 
+After revising the theory, I looked online for similar projects; the most impressive I found was on The Lord of the Rings at 
+http://lotrproject.com/statistics/books/sentimentanalysis. However the idea wasn't exactly what I was planning to do with the 
+analysis. 
+With the help of github's packages, cheat sheets and a good amount of patience, I was able to define and realize this starting
+project about sentiment analysis of the seven books of Harry Potter. I will include a brief description for each step here below.
+---
+
+Working on different computers and multiple Rstudio, this project required some packages to be installed. Some of them are extra
+material which I never needed but it was useful to download them and order them in the same order of the libraries: it is easy
+to check the list if all the packages appear in the same order of the libraries. 
 
 Install packages
 ```{r}
-install.packages("harrypotter")
-install.packages("wordcloud")
-install.packages("devtools")
-install.packages("tidyverse")
-install.packages("igraph")
-install.packages("ggraph")
-install.packages("ggwordcloud")
+install.package("wordcloud")
+install.package("devtools")
+install.package("tidyverse")      
+install.package("stringr")        
+install.package("tidytext")
+install.package("dplyr")
+install.package("reshape2")
+install.package("igraph")
+install.package("ggraph")
+install.package("harrypotter")
+install.package("ggplot2")
+install.package("ggwordcloud")
+
 ```
+In this passage, I loaded the libraries. At the end, there is the github repository with all the Harry Potter books.
 
 Libraries
 ```{r}
@@ -53,7 +71,16 @@ books <- list(philosophers_stone, chamber_of_secrets,
               order_of_the_phoenix, half_blood_prince,
               deathly_hallows)
 ```
+---------
+This is the passage that created more problems. As it shows here, two options are provided: the first one with quote signs gives
+a 7x3 table with the books individually organized; the second, without quote signs, organized the list on single words. In fact, 
+the second table is 1,089,386x3, including the words included in the chapters' titles. I acknowledge that this is an extra step,
+but I preferred to tokenize each word to have a solid base to work backwards in case the next passages would fail. 
+OPTION #2 failed immediately and multiple times because Rstudio wouldn't recognise the objects in between the quote signs without 
+the sign. To reach the single tokens list, I went back to the libraries, loaded them again and analysed the previous passage; 
+it took some time and multiple modifications to the previous variables to finally reach the tokens' list I was picturing. 
 
+OPTION #1
 Combine into a list (with explanation for each line) - (with quotes signs)
 ```{r}
 hp_words <- list("philosophers_stone", "chamber_of_secrets",
@@ -61,15 +88,15 @@ hp_words <- list("philosophers_stone", "chamber_of_secrets",
               "order_of_the_phoenix", "half_blood_prince",
               "deathly_hallows"
 ) %>%
-  # name each list element
+  # name each element
   set_names(hp_books) %>%
-  # convert each book to a data frame and merge into a single data frame
+  # convert each book to a list and merge into a single one, much longer
   map_df(as_tibble, .id = "book") %>%
   # convert book to a factor
   mutate(book = factor(book, levels = hp_books)) %>%
   # remove empty chapters
   drop_na(value) %>%
-  # create a chapter id column
+  # create a chapter column
   group_by(book) %>%
   mutate(chapter = row_number(book)) %>%
   # tokenize the data frame
@@ -131,6 +158,12 @@ RESULTS OPTION #2 FROM CONSOLE (bottom of RStudio) - cannot copy R notebook tibb
  9 philosophers_stone       1 of     
 10 philosophers_stone       1 number 
 # … with 1,089,376 more rows
+---
+The next two passages are finalized to find the most frequent words for each book and decide if the statement in the introduction
+(".K. Rowling modeled the Harry Potter characters' psychologies around emotions and how the protagonist - Harry - reacts 
+emotionally to his closest human connections.") is true. To get to the final result, it came necessary to inspect each book and 
+place them visually one next to the other to run a comparative analysis. For personal taste, the graphs for each book are in
+different colors.
 
 Finding the most frequent words in HP for each book (finalized to extract the sentiments)
 ```{r}
@@ -155,10 +188,19 @@ hp_words %>%
   coord_flip() +
   theme(legend.position = "none")
 ```
-RESULTS (cannot copy the table)
+RESULTS (cannot copy the tables)
 Harry is the most frequent word in all of the books followed by Ron in the first 4 books, Hermione in the 5th and 7th and 
 Dumbledore in the 6th. The first 3-4 names of every book appear always to be Harry, Ron, Hermione, Dumbledore or Hagrid.
-Having a series of characters that occur so close one another shows that J.K. Rowling writing is heavily sentimental.
+Having a series of characters that occur so close one another shows that J.K. Rowling writing is heavily oriented on human 
+connections.
+---
+Here, we finally arrive to the sentiment analysis; the goal was to inspect the seven books as a single unit and extract the major
+categories of sentiments. A 10x2 table shows that the negative sentiments are predominant in the Harry Potter series with an 
+overwhelming majority of negative feelings - fear, anger, sadness, disgust; however, trust is the third most described feeling, 
+leading to the conclusion that - as stated multiple times by Dumbledore over the books - love and trust protected Harry over his
+whole life. Also, trust is the sentiment that keeps the story going, more than hope, because the human connections created by
+J.K. Rowling throught her writing base their closeness on mutual trust - see the 7th book: Harry trusts Dumbledore even if he is
+dead and leave for the Horcrux hunt, going on also when it seemed pointless.
 
 Extracting sentiment list
 ```{r}
@@ -179,6 +221,8 @@ disgust	        1058
 anticipation	  839			
 joy	            689			
 surprise	      534	
+---
+In this last three passages, I wanted to deeply explore the sentiment vocabulary in multiple forms.
 
 Group the words by AFINN dictionary (sentiment analysis)
 ```{r}
