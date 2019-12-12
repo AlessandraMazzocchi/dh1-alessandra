@@ -1,4 +1,7 @@
-In this project, I would like to explore how 
+In this project, I would like to explore how J.K. Rowling modeled the Harry Potter characters' psychologies around
+emotions and how the protagonist - Harry - reacts emotionally to his closest human connections. 
+Before starting this project, I revised the theoretical portion of coding available on the syllabus and two books 
+available in the lab: Deep Learning with R and Text Analysis with R for Student of Literature. 
 
 Install packages
 ```{r}
